@@ -1,0 +1,999 @@
+<!doctype html>
+<html lang="en" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NexWa - Premium WhatsApp SaaS Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              waGreen: "#25D366",
+              waGreenDark: "#128C7E",
+              slateDark: "#0F172A",
+              slateCard: "rgba(30, 41, 59, 0.7)",
+              accentGradient:
+                "linear-gradient(135deg, #25D366 0%, #128C7E 100%)",
+            },
+            fontFamily: {
+              sans: ["Inter", "sans-serif"],
+              display: ["Plus Jakarta Sans", "sans-serif"],
+            },
+            backdropBlur: {
+              xs: "2px",
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      body {
+        background-color: #0f172a;
+        color: #f8fafc;
+        overflow-x: hidden;
+      }
+      .glass-panel {
+        background: rgba(30, 41, 59, 0.6);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 1.5rem;
+        box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+      }
+      .sidebar-active {
+        background: rgba(37, 211, 102, 0.15);
+        color: #25d366;
+        border-right: 3px solid #25d366;
+      }
+      .nav-item:hover {
+        background: rgba(255, 255, 255, 0.05);
+      }
+      ::-webkit-scrollbar {
+        width: 6px;
+      }
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #334155;
+        border-radius: 10px;
+      }
+      .status-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        display: inline-block;
+        margin-right: 6px;
+        box-shadow: 0 0 10px rgba(37, 211, 102, 0.5);
+      }
+      .animate-float {
+        animation: float 6s ease-in-out infinite;
+      }
+      @keyframes float {
+        0%,
+        100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-10px);
+        }
+      }
+    </style>
+  </head>
+  <body class="font-sans antialiased">
+    <!-- Sidebar (Desktop) -->
+    <aside
+      class="fixed left-0 top-0 h-screen w-64 glass-panel m-4 hidden lg:flex flex-col z-50"
+    >
+      <div class="p-8">
+        <div class="flex items-center gap-3">
+          <div
+            class="w-10 h-10 bg-waGreen rounded-xl flex items-center justify-center shadow-lg shadow-waGreen/20"
+          >
+            <svg
+              class="w-6 h-6 text-white"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2.5"
+                d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
+              ></path>
+            </svg>
+          </div>
+          <span class="text-2xl font-display font-extrabold tracking-tight"
+            >NexWa</span
+          >
+        </div>
+      </div>
+      <nav class="flex-1 px-4 space-y-1">
+        <a
+          href="#"
+          onclick="switchTab('dashboard')"
+          class="nav-item flex items-center gap-3 p-3 rounded-xl transition-all duration-200 sidebar-active"
+          id="nav-dashboard"
+        >
+          <svg
+            class="w-5 h-5"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M4 6a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2H6a2 2 0 01-2-2v-4zM14 16a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2h-2a2 2 0 01-2-2v-4z"
+            ></path>
+          </svg>
+          <span class="font-medium">Dashboard</span>
+        </a>
+        <a
+          href="#"
+          onclick="switchTab('schedule')"
+          class="nav-item flex items-center gap-3 p-3 rounded-xl transition-all duration-200"
+          id="nav-schedule"
+        >
+          <svg
+            class="w-5 h-5"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+            ></path>
+          </svg>
+          <span class="font-medium">Schedule</span>
+        </a>
+        <a
+          href="#"
+          onclick="switchTab('bulk')"
+          class="nav-item flex items-center gap-3 p-3 rounded-xl transition-all duration-200"
+          id="nav-bulk"
+        >
+          <svg
+            class="w-5 h-5"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"
+            ></path>
+          </svg>
+          <span class="font-medium">Bulk Campaigns</span>
+        </a>
+        <a
+          href="#"
+          class="nav-item flex items-center gap-3 p-3 rounded-xl transition-all duration-200"
+        >
+          <svg
+            class="w-5 h-5"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+            ></path>
+          </svg>
+          <span class="font-medium">Templates</span>
+        </a>
+        <a
+          href="#"
+          class="nav-item flex items-center gap-3 p-3 rounded-xl transition-all duration-200"
+        >
+          <svg
+            class="w-5 h-5"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+            ></path>
+          </svg>
+          <span class="font-medium">Analytics</span>
+        </a>
+      </nav>
+      <div class="p-4 border-t border-white/10">
+        <a
+          href="#"
+          class="nav-item flex items-center gap-3 p-3 rounded-xl transition-all duration-200"
+        >
+          <svg
+            class="w-5 h-5"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
+            ></path>
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+            ></path>
+          </svg>
+          <span class="font-medium">Settings</span>
+        </a>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="lg:ml-72 min-h-screen p-4 lg:p-8">
+      <!-- Topbar -->
+      <header class="flex items-center justify-between glass-panel p-4 mb-8">
+        <div class="flex items-center gap-4">
+          <h2 id="page-title" class="text-xl font-display font-bold">
+            Dashboard
+          </h2>
+          <div class="h-6 w-px bg-white/10"></div>
+          <div
+            class="flex items-center text-xs font-semibold px-3 py-1 bg-waGreen/10 text-waGreen rounded-full border border-waGreen/20"
+          >
+            <span class="status-dot bg-waGreen"></span>
+            Connected
+          </div>
+        </div>
+        <div class="flex items-center gap-4">
+          <button
+            class="relative p-2 text-slate-400 hover:text-white transition-colors"
+          >
+            <svg
+              class="w-6 h-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
+              ></path>
+            </svg>
+            <span
+              class="absolute top-1 right-1 w-2 h-2 bg-waGreen rounded-full"
+            ></span>
+          </button>
+          <div class="flex items-center gap-3 pl-4 border-l border-white/10">
+            <div class="text-right hidden sm:block">
+              <p class="text-sm font-semibold">Alex Rivers</p>
+              <p class="text-[10px] text-slate-400">Enterprise Plan</p>
+            </div>
+            <div
+              class="w-10 h-10 rounded-full bg-slate-700 flex items-center justify-center border-2 border-waGreen overflow-hidden"
+            >
+              <span class="text-sm font-bold">AR</span>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Dynamic Content Area -->
+      <div id="content-area" class="space-y-8 transition-all duration-500">
+        <!-- Dashboard View -->
+        <div id="view-dashboard" class="space-y-8">
+          <!-- Bento Grid Metrics -->
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div
+              class="glass-panel p-6 hover:border-waGreen/30 transition-all duration-300"
+            >
+              <p class="text-slate-400 text-sm font-medium mb-1">
+                Messages Sent
+              </p>
+              <h3 class="text-3xl font-display font-extrabold">12,482</h3>
+              <p class="text-waGreen text-xs mt-2 flex items-center gap-1">
+                <svg
+                  class="w-3 h-3"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2.5"
+                    d="M5 10l7-7m0 0l7 7m-7-7v18"
+                  ></path>
+                </svg>
+                +12% from yesterday
+              </p>
+            </div>
+            <div
+              class="glass-panel p-6 hover:border-waGreen/30 transition-all duration-300"
+            >
+              <p class="text-slate-400 text-sm font-medium mb-1">
+                Success Rate
+              </p>
+              <h3 class="text-3xl font-display font-extrabold text-waGreen">
+                99.2%
+              </h3>
+              <div class="w-full bg-slate-800 h-1.5 rounded-full mt-4">
+                <div
+                  class="bg-waGreen h-1.5 rounded-full"
+                  style="width: 99.2%"
+                ></div>
+              </div>
+            </div>
+            <div
+              class="glass-panel p-6 hover:border-waGreen/30 transition-all duration-300"
+            >
+              <p class="text-slate-400 text-sm font-medium mb-1">
+                Scheduled Jobs
+              </p>
+              <h3 class="text-3xl font-display font-extrabold">45</h3>
+              <p class="text-slate-400 text-xs mt-2">Next job in 12 mins</p>
+            </div>
+            <div
+              class="glass-panel p-6 hover:border-waGreen/30 transition-all duration-300"
+            >
+              <p class="text-slate-400 text-sm font-medium mb-1">API Latency</p>
+              <h3 class="text-3xl font-display font-extrabold">42ms</h3>
+              <p class="text-waGreen text-xs mt-2 flex items-center gap-1">
+                <span class="status-dot bg-waGreen"></span> Optimal
+              </p>
+            </div>
+          </div>
+
+          <!-- Main Chart and Quick Connect -->
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div class="lg:col-span-2 glass-panel p-8">
+              <div class="flex justify-between items-center mb-8">
+                <div>
+                  <h4 class="text-lg font-bold font-display">
+                    Messaging Activity
+                  </h4>
+                  <p class="text-slate-400 text-sm">
+                    Real-time performance metrics
+                  </p>
+                </div>
+                <select
+                  class="bg-slate-800 border border-white/10 rounded-lg px-3 py-1.5 text-sm outline-none focus:border-waGreen"
+                >
+                  <option>Last 7 days</option>
+                  <option>Last 30 days</option>
+                </select>
+              </div>
+              <div class="h-64 flex items-end justify-between gap-2">
+                <!-- Visual Chart Mockup -->
+                <div
+                  class="w-full bg-waGreen/20 rounded-t-lg h-24 hover:bg-waGreen/40 transition-all duration-300"
+                ></div>
+                <div
+                  class="w-full bg-waGreen/20 rounded-t-lg h-32 hover:bg-waGreen/40 transition-all duration-300"
+                ></div>
+                <div
+                  class="w-full bg-waGreen/20 rounded-t-lg h-48 hover:bg-waGreen/40 transition-all duration-300"
+                ></div>
+                <div
+                  class="w-full bg-waGreen/40 rounded-t-lg h-56 border-t-2 border-waGreen transition-all duration-300"
+                ></div>
+                <div
+                  class="w-full bg-waGreen/20 rounded-t-lg h-36 hover:bg-waGreen/40 transition-all duration-300"
+                ></div>
+                <div
+                  class="w-full bg-waGreen/20 rounded-t-lg h-44 hover:bg-waGreen/40 transition-all duration-300"
+                ></div>
+                <div
+                  class="w-full bg-waGreen/20 rounded-t-lg h-28 hover:bg-waGreen/40 transition-all duration-300"
+                ></div>
+              </div>
+              <div
+                class="flex justify-between mt-4 text-xs text-slate-500 font-medium px-2"
+              >
+                <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span
+                ><span>Fri</span><span>Sat</span><span>Sun</span>
+              </div>
+            </div>
+
+            <div
+              class="glass-panel p-8 flex flex-col items-center justify-center text-center"
+            >
+              <div class="mb-6 p-4 bg-white rounded-2xl animate-float">
+                <!-- QR Code Mockup -->
+                <svg
+                  class="w-32 h-32 text-slate-900"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                >
+                  <path
+                    d="M3 3h6v6H3V3zm2 2v2h2V5H5zm8-2h6v6h-6V3zm2 2v2h2V5h-2zM3 13h6v6H3v-6zm2 2v2h2v-2H5zm13-2h3v2h-3v-2zm-3 0h2v2h-2v-2zm3 3h3v3h-3v-3zm-3 3h2v2h-2v-2zm-3-3h2v2h-2v-2zm0-3h2v2h-2v-2zm3 0h2v2h-2v-2zM13 13h2v2h-2v-2z"
+                  />
+                </svg>
+              </div>
+              <h4 class="text-lg font-bold font-display mb-2">
+                WhatsApp Instance
+              </h4>
+              <p class="text-slate-400 text-sm mb-6">
+                Scan the QR code to keep your session alive and maintain active
+                broadcasting.
+              </p>
+              <button
+                class="w-full bg-waGreen hover:bg-waGreenDark text-slate-900 font-bold py-3 rounded-xl transition-all duration-300 flex items-center justify-center gap-2"
+              >
+                <svg
+                  class="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                  ></path>
+                </svg>
+                Refresh Session
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Schedule Message View (Hidden by default) -->
+        <div id="view-schedule" class="hidden space-y-8 max-w-4xl mx-auto">
+          <div class="glass-panel p-8">
+            <h3 class="text-2xl font-display font-bold mb-8">
+              Schedule New Message
+            </h3>
+
+            <form class="space-y-6">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label class="block text-sm font-medium text-slate-400 mb-2"
+                    >Recipient Phone Number</label
+                  >
+                  <input
+                    type="text"
+                    placeholder="+1 (555) 000-0000"
+                    class="w-full bg-slate-800/50 border border-white/10 rounded-xl px-4 py-3 outline-none focus:border-waGreen transition-all"
+                  />
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-slate-400 mb-2"
+                    >Schedule Time</label
+                  >
+                  <input
+                    type="datetime-local"
+                    class="w-full bg-slate-800/50 border border-white/10 rounded-xl px-4 py-3 outline-none focus:border-waGreen transition-all"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label class="block text-sm font-medium text-slate-400 mb-2"
+                  >Message Content</label
+                >
+                <div
+                  class="bg-slate-800/50 border border-white/10 rounded-xl overflow-hidden focus-within:border-waGreen transition-all"
+                >
+                  <div
+                    class="flex items-center gap-2 p-2 border-b border-white/5 bg-white/5"
+                  >
+                    <button
+                      type="button"
+                      class="p-1.5 hover:bg-white/10 rounded"
+                    >
+                      <b>B</b>
+                    </button>
+                    <button
+                      type="button"
+                      class="p-1.5 hover:bg-white/10 rounded"
+                    >
+                      <i>I</i>
+                    </button>
+                    <button
+                      type="button"
+                      class="p-1.5 hover:bg-white/10 rounded"
+                    >
+                      🔗
+                    </button>
+                    <button
+                      type="button"
+                      class="p-1.5 hover:bg-white/10 rounded"
+                    >
+                      😊
+                    </button>
+                  </div>
+                  <textarea
+                    rows="6"
+                    placeholder="Type your message here... Use {{name}} for personalization."
+                    class="w-full bg-transparent px-4 py-3 outline-none resize-none"
+                  ></textarea>
+                </div>
+              </div>
+
+              <div>
+                <label class="block text-sm font-medium text-slate-400 mb-2"
+                  >Attachments</label
+                >
+                <div
+                  class="border-2 border-dashed border-white/10 rounded-2xl p-8 flex flex-col items-center justify-center text-slate-500 hover:border-waGreen/50 transition-all cursor-pointer"
+                >
+                  <input type="file" id="mediaUpload" hidden />
+
+                  <svg
+                    class="w-10 h-10 mb-2"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
+                    ></path>
+                  </svg>
+                  <p class="text-sm">
+                    Click or drag to upload (Images, Video, PDFs)
+                  </p>
+                </div>
+              </div>
+
+              <div class="flex gap-4 pt-4">
+                <button
+                  type="submit"
+                  class="flex-1 bg-waGreen hover:bg-waGreenDark text-slate-900 font-bold py-4 rounded-xl shadow-lg shadow-waGreen/10 transition-all active:scale-[0.98]"
+                >
+                  Schedule Message
+                </button>
+                <button
+                  type="button"
+                  class="px-8 bg-slate-800 hover:bg-slate-700 font-bold py-4 rounded-xl transition-all"
+                >
+                  Save Draft
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- Bulk Campaign View (Hidden by default) -->
+        <div id="view-bulk" class="hidden space-y-8">
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div class="lg:col-span-1 space-y-6">
+              <div class="glass-panel p-8">
+                <h3 class="text-xl font-display font-bold mb-4 text-waGreen">
+                  Campaign Setup
+                </h3>
+                <p class="text-slate-400 text-sm mb-8">
+                  Upload your contact list and launch a high-performance
+                  broadcast.
+                </p>
+
+                <div class="space-y-4">
+                  <div
+                    class="p-4 bg-slate-800/50 border border-white/10 rounded-xl"
+                  >
+                    <div class="flex justify-between items-center mb-2">
+                      <span class="text-sm font-semibold">CSV Data</span>
+                      <span class="text-xs text-waGreen">Loaded</span>
+                    </div>
+                    <p class="text-xs text-slate-400">
+                      clients_may_2024.csv (1,240 contacts)
+                    </p>
+                  </div>
+                  <div
+                    class="p-4 bg-slate-800/50 border border-white/10 rounded-xl"
+                  >
+                    <div class="flex justify-between items-center mb-2">
+                      <span class="text-sm font-semibold">Template</span>
+                    </div>
+                    <select
+                      class="w-full bg-transparent text-xs text-slate-400 outline-none"
+                    >
+                      <option>Select a message template...</option>
+                      <option>Product Launch Promo</option>
+                      <option>Feedback Request</option>
+                    </select>
+                  </div>
+                </div>
+
+                <button
+                  class="w-full mt-8 bg-waGreen hover:bg-waGreenDark text-slate-900 font-bold py-4 rounded-xl transition-all"
+                >
+                  Start Campaign
+                </button>
+              </div>
+            </div>
+
+            <div class="lg:col-span-2 glass-panel p-8">
+              <h3 class="text-xl font-display font-bold mb-6">
+                Live Campaign Progress
+              </h3>
+              <div class="space-y-8">
+                <div
+                  class="p-6 bg-slate-800/30 rounded-2xl border border-white/5"
+                >
+                  <div class="flex justify-between items-center mb-4">
+                    <span class="font-bold">Q2 Product Launch Blast</span>
+                    <span
+                      class="text-xs font-bold px-2 py-1 bg-waGreen/20 text-waGreen rounded uppercase tracking-wider"
+                      >Active</span
+                    >
+                  </div>
+                  <div
+                    class="w-full bg-slate-800 h-3 rounded-full mb-2 overflow-hidden"
+                  >
+                    <div
+                      class="bg-gradient-to-r from-waGreen to-waGreenDark h-full w-[65%] rounded-full relative"
+                    >
+                      <div
+                        class="absolute inset-0 bg-white/20 animate-pulse"
+                      ></div>
+                    </div>
+                  </div>
+                  <div
+                    class="flex justify-between text-xs text-slate-400 font-medium"
+                  >
+                    <span>65% Complete</span>
+                    <span>806 / 1,240 Sent</span>
+                  </div>
+                </div>
+
+                <div class="overflow-hidden rounded-xl border border-white/10">
+                  <table class="w-full text-left">
+                    <thead
+                      class="bg-white/5 text-slate-400 text-xs uppercase tracking-wider"
+                    >
+                      <tr>
+                        <th class="px-6 py-4">Contact</th>
+                        <th class="px-6 py-4">Status</th>
+                        <th class="px-6 py-4">Timestamp</th>
+                      </tr>
+                    </thead>
+                    <tbody class="text-sm divide-y divide-white/5">
+                      <tr class="hover:bg-white/5 transition-colors">
+                        <td class="px-6 py-4">Sarah Jenkins</td>
+                        <td class="px-6 py-4">
+                          <span class="text-waGreen">✓ Delivered</span>
+                        </td>
+                        <td class="px-6 py-4">Just now</td>
+                      </tr>
+                      <tr class="hover:bg-white/5 transition-colors">
+                        <td class="px-6 py-4">Michael Ross</td>
+                        <td class="px-6 py-4">
+                          <span class="text-waGreen">✓ Sent</span>
+                        </td>
+                        <td class="px-6 py-4">2m ago</td>
+                      </tr>
+                      <tr class="hover:bg-white/5 transition-colors">
+                        <td class="px-6 py-4">David G.</td>
+                        <td class="px-6 py-4">
+                          <span class="text-red-400">✗ Failed</span>
+                        </td>
+                        <td class="px-6 py-4">5m ago</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Mobile Bottom Tab Bar -->
+    <nav
+      class="lg:hidden fixed bottom-0 left-0 right-0 glass-panel !rounded-none border-t border-white/10 flex items-center justify-around p-4 z-50"
+    >
+      <button
+        onclick="switchTab('dashboard')"
+        class="flex flex-col items-center gap-1 text-waGreen"
+        id="mob-dashboard"
+      >
+        <svg
+          class="w-6 h-6"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
+          ></path>
+        </svg>
+        <span class="text-[10px] font-bold">Home</span>
+      </button>
+      <button
+        onclick="switchTab('schedule')"
+        class="flex flex-col items-center gap-1 text-slate-400"
+        id="mob-schedule"
+      >
+        <svg
+          class="w-6 h-6"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+          ></path>
+        </svg>
+        <span class="text-[10px] font-bold">Schedule</span>
+      </button>
+      <button
+        onclick="switchTab('bulk')"
+        class="flex flex-col items-center gap-1 text-slate-400"
+        id="mob-bulk"
+      >
+        <svg
+          class="w-6 h-6"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"
+          ></path>
+        </svg>
+        <span class="text-[10px] font-bold">Campaigns</span>
+      </button>
+      <button class="flex flex-col items-center gap-1 text-slate-400">
+        <svg
+          class="w-6 h-6"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
+          ></path>
+        </svg>
+        <span class="text-[10px] font-bold">Settings</span>
+      </button>
+    </nav>
+
+    <div id="toastBox" class="fixed bottom-6 right-6 space-y-3 z-50"></div>
+
+    <script src="/socket.io/socket.io.js"></script>
+
+    <script>
+      function switchTab(tab) {
+        // Views
+        const views = ["dashboard", "schedule", "bulk"];
+        views.forEach((v) => {
+          document.getElementById("view-" + v).classList.add("hidden");
+          // Sidebar items
+          const sidebarItem = document.getElementById("nav-" + v);
+          if (sidebarItem) {
+            sidebarItem.classList.remove("sidebar-active");
+            sidebarItem.classList.remove("text-waGreen");
+          }
+          // Mobile items
+          const mobItem = document.getElementById("mob-" + v);
+          if (mobItem) {
+            mobItem.classList.remove("text-waGreen");
+            mobItem.classList.add("text-slate-400");
+          }
+        });
+
+        // Show selected
+        document.getElementById("view-" + tab).classList.remove("hidden");
+
+        // Update Title
+        const titleMap = {
+          dashboard: "Dashboard",
+          schedule: "Schedule Message",
+          bulk: "Bulk Campaigns",
+        };
+        document.getElementById("page-title").innerText = titleMap[tab];
+
+        // Update UI indicators
+        const activeSidebar = document.getElementById("nav-" + tab);
+        if (activeSidebar) activeSidebar.classList.add("sidebar-active");
+
+        const activeMob = document.getElementById("mob-" + tab);
+        if (activeMob) {
+          activeMob.classList.add("text-waGreen");
+          activeMob.classList.remove("text-slate-400");
+        }
+
+        // Simple animation trigger
+        const content = document.getElementById("content-area");
+        content.style.opacity = "0";
+        content.style.transform = "translateY(10px)";
+        setTimeout(() => {
+          content.style.opacity = "1";
+          content.style.transform = "translateY(0)";
+        }, 50);
+      }
+
+      const socket = io();
+
+      socket.on("wa-status", (data) => {
+        const statusBox = document.querySelector(".status-dot").parentElement;
+        const nameBox = document.querySelector(".text-right .text-sm");
+
+        if (data.status === "connected") {
+          statusBox.innerHTML =
+            '<span class="status-dot bg-waGreen"></span> Connected';
+        } else {
+          statusBox.innerHTML =
+            '<span class="status-dot bg-red-500"></span> Disconnected';
+        }
+
+        if (data.name) {
+          nameBox.innerText = data.name;
+        }
+      });
+
+      function showToast(message) {
+        const toastBox = document.getElementById("toastBox");
+
+        const toast = document.createElement("div");
+
+        toast.className =
+          "bg-waGreen text-slate-900 font-semibold px-6 py-4 rounded-xl shadow-xl animate-float";
+
+        toast.innerHTML = "🚀 " + message;
+
+        toastBox.appendChild(toast);
+
+        setTimeout(() => {
+          toast.remove();
+        }, 4000);
+      }
+
+      async function loadStats() {
+        const res = await fetch("/stats");
+        const data = await res.json();
+
+        document.getElementById("sentCount").innerText = data.sent;
+      }
+
+      async function loadWhatsAppStatus() {
+        const res = await fetch("/wa-status");
+        const data = await res.json();
+
+        const statusIndicator = document.querySelector(".status-dot");
+        const statusText = statusIndicator.parentElement;
+
+        if (data.status === "connected") {
+          statusIndicator.style.background = "#25D366";
+          statusText.innerHTML =
+            '<span class="status-dot bg-waGreen"></span> Connected';
+        } else {
+          statusIndicator.style.background = "red";
+          statusText.innerHTML =
+            '<span class="status-dot bg-red-500"></span> Disconnected';
+        }
+
+        if (data.name) {
+          document.querySelector(".text-right .text-sm").innerText = data.name;
+        }
+      }
+
+      async function loadQR() {
+        const res = await fetch("/qr");
+        const data = await res.json();
+
+        if (!data.qr) return;
+
+        const img = document.createElement("img");
+        img.src = data.qr;
+        img.style.width = "180px";
+
+        const qrBox = document.querySelector(".animate-float");
+        qrBox.innerHTML = "";
+        qrBox.appendChild(img);
+      }
+
+      // Initialize state
+      window.onload = () => {
+        switchTab("dashboard");
+        loadQR();
+
+        // connect schedule form to backend
+        const form = document.querySelector("#view-schedule form");
+
+        if (form) {
+          form.addEventListener("submit", async (e) => {
+            e.preventDefault();
+
+            const phone = document.querySelector(
+              '#view-schedule input[type="text"]',
+            ).value;
+            const time = document.querySelector(
+              '#view-schedule input[type="datetime-local"]',
+            ).value;
+            const message = document.querySelector(
+              "#view-schedule textarea",
+            ).value;
+
+            const res = await fetch("/schedule", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                to: phone,
+                message: message,
+                type: window.uploadedMedia ? "image" : "text",
+                scheduleTime: time,
+                media: window.uploadedMedia || "",
+              }),
+            });
+
+            const data = await res.json();
+
+            showToast(
+              "Boom! Your message is locked in and ready to fly at the scheduled time 😎",
+            );
+          });
+        }
+
+        const uploadBox = document.querySelector(
+          "#view-schedule .border-dashed",
+        );
+        const fileInput = document.getElementById("mediaUpload");
+
+        if (uploadBox && fileInput) {
+          uploadBox.addEventListener("click", () => {
+            fileInput.click();
+          });
+        }
+
+        document
+          .querySelector("#mediaUpload")
+          .addEventListener("change", async (e) => {
+            const formData = new FormData();
+            formData.append("media", e.target.files[0]);
+
+            const res = await fetch("/upload", {
+              method: "POST",
+              body: formData,
+            });
+
+            const data = await res.json();
+
+            window.uploadedMedia = data.path;
+          });
+      };
+    </script>
+  </body>
+</html>
