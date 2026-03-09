@@ -33,11 +33,20 @@ mongoose.connect(
 );
 
 const client = new Client({
-  authStrategy: new LocalAuth(),
-  puppeteer: {
-    headless: true,
-    args: ["--no-sandbox", "--disable-setuid-sandbox"]
-  }
+    authStrategy: new LocalAuth(),
+    puppeteer: {
+        headless: true,
+        args: [
+            '--no-sandbox',
+            '--disable-setuid-sandbox',
+            '--disable-dev-shm-usage',
+            '--disable-accelerated-2d-canvas',
+            '--no-first-run',
+            '--no-zygote',
+            '--single-process', // <- this one doesn't work well on Windows, but is great for Linux/Render
+            '--disable-gpu'
+        ]
+    }
 });
 
 client.on("qr", (qr) => {
@@ -199,4 +208,5 @@ const PORT = process.env.PORT || 3000;
 http.listen(PORT, () => {
   console.log("Server running on port " + PORT);
 });
+
 
